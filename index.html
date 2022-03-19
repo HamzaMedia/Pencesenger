@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sohbet uygulaması</title>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+<script type="text/javascript">
+$(function(){
+
+var socket = io(); //socketi tanımlıyoruz. 
+function mesajgonderolay(){ //mesaj gönderilmesi olayını tanımladığım fonksiyon
+socket.emit('sohbetmesaj', $('#mesaj').val());//sunucuya sohbetmesaj olayını ve mesaj kutusundaki yazıyı gönder
+$('#mesaj').val(''); //mesaj kutusundaki yazıyı sıfırla
+}
+socket.on('sohbetmesaj', function(msg){ //sunucudan sohbetmesaj verisi geldiğinde çalışacak fonksiyon
+$('#mesajlar').append($('<li>').text(msg)); //mesajlar idli elemente mesajı ekle. 
+});
+
+$('#btnmesajgonder').click(mesajgonderolay);//mesajgonder butonuna tıklayınca mesajgonderolayı çağırılıyor.
+
+$('input#mesaj').bind('keypress', function(e) { //entera tıklanıldığında da mesajgonderolayını çağırsın. 
+if(e.keyCode==13){
+mesajgonderolay();
+};
+});
+})
+</script>
+</head>
+<body>
+<ul id="mesajlar" type="circle">
+<li>Mesaj gönderin</li>
+</ul>
+<input type="text" id="mesaj" placeholder="Mesaj yazın"/>
+<button id="btnmesajgonder">Mesaj gönder</button>
+</body>
+</html>
